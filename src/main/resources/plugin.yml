@@ -1,0 +1,6 @@
+name: LoginControl
+main: com.github.miniyosshi.logincontrol.LoginControl
+version: 1.0
+commands:
+  sethereasapermittedpoint:
+    description: ログイン場所を指定します。
