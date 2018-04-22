@@ -39,7 +39,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 		getLogger().info("Plugin LoginControl has been disabled.");
 	}
 	
-	public Location  q = new Location(this.getServer().getWorld("World"),128.0,79.0,115.0);
+	public static Location q = new Location(Bukkit.getServer().getWorld("world"),128.0,79.0,115.0);
 	
 	//ログイン時
 	@EventHandler
@@ -57,6 +57,8 @@ public class LoginControl extends JavaPlugin implements Listener{
 		else
 			p.sendMessage("そのままの場所です");
 	}
+	
+	
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
