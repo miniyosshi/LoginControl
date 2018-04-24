@@ -62,7 +62,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("sethereasapermittedpoint")){
+		if (cmd.getName().equalsIgnoreCase("setapermittedpoint")){
 			Player player = null;
 			if(sender instanceof Player) {
 				sender.sendMessage("ここを許可場所に設定しなおします");
