@@ -3,16 +3,21 @@ package com.github.miniyosshi.logincontrol;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.server.Skeleton;
 import java.util.Properties;
+
+import javax.swing.text.html.parser.Entity;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LoginControl extends JavaPlugin implements Listener{
@@ -24,9 +29,10 @@ public class LoginControl extends JavaPlugin implements Listener{
 		getLogger().info("Plugin LoginControl has been enabled.");
 		
 		//許可場所（外部から読み込み）
+		Properties properties = new Properties();
+		String strpass = "point.properties";
 		try {
-			Properties properties = new Properties();
-			String strpass = "point.properties";
+			
 			InputStream istream = new FileInputStream(strpass);
 			properties.load(istream);
 		} catch (IOException e) {
@@ -39,23 +45,31 @@ public class LoginControl extends JavaPlugin implements Listener{
 		getLogger().info("Plugin LoginControl has been disabled.");
 	}
 	
-	public static Location q = new Location(Bukkit.getServer().getWorld("world"),128.0,79.0,115.0);
 	
 	//ログイン時
 	@EventHandler
 	public void onPlayerJoin (PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		p.sendMessage("こんにちは、"+ p.getPlayer().getName() + "さん。今の許可場所は"+ q.toString() 
-		+"です。リストは"+ Bukkit.getWorlds().toString() +"問題は"+ Bukkit.getWorlds().get(0));
+		p.sendMessage("こんにちは、"+ p.getPlayer().getName() + "さん。"+"リストは"+ Bukkit.getWorlds().toString());
 		
 		Location loc = p.getLocation();
-		if (loc.getX() != q.getX() || loc.getY() != q.getY() || loc.getZ() != q.getZ() ) {
-			p.teleport(q);
+		if (loc.getX() != 0  || loc.getY() != 0 || loc.getZ() != 0 ) {
 			
-			p.sendMessage("あなたは"+loc.toString()+"にいたので"+q.toString()+"に移動しました");
+			p.sendMessage("あなたは"+loc.toString()+"にいたので"+"に移動しました(仮)");
 		}
 		else
 			p.sendMessage("そのままの場所です");
+	}
+	
+	//ログアウト時
+	@EventHandler
+	public void onPlayerLogout (PlayerQuitEvent e) {
+		Entity s = new Entity(null, 0, null);
+		
+		e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.SKELETON);
+		
+		
+		//summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:skull",Damage:3,Count:1b,tag:{SkullOwner:{Name:"Future0918"}}}]}
 	}
 	
 	
@@ -67,7 +81,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 			if(sender instanceof Player) {
 				sender.sendMessage("ここを許可場所に設定しなおします");
 				player = (Player) sender;
-				q = player.getLocation();
+				
 				return true;
 			}
 			else {
