@@ -3,21 +3,25 @@ package com.github.miniyosshi.logincontrol;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.rmi.server.Skeleton;
 import java.util.Properties;
 
 import javax.swing.text.html.parser.Entity;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Spider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LoginControl extends JavaPlugin implements Listener{
@@ -64,12 +68,19 @@ public class LoginControl extends JavaPlugin implements Listener{
 	//ログアウト時
 	@EventHandler
 	public void onPlayerLogout (PlayerQuitEvent e) {
-		Entity s = new Entity(null, 0, null);
 		
-		e.getPlayer().getWorld().spawnEntity(e.getPlayer().getLocation(), EntityType.SKELETON);
+		ItemStack skull = new ItemStack(Material.SKULL_ITEM,1,(byte)3);
+		SkullMeta sm = (SkullMeta) skull.getItemMeta();
+		sm.setOwningPlayer(e.getPlayer());
+		skull.setItemMeta(sm);
 		
+		Location loc =e.getPlayer().getLocation();
 		
-		//summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:skull",Damage:3,Count:1b,tag:{SkullOwner:{Name:"Future0918"}}}]}
+		Skeleton s = (Skeleton) e.getPlayer().getWorld().spawnEntity(loc, EntityType.SKELETON);
+		s.setCustomNameVisible(true);
+		s.setCustomName("何かの成れの果て");
+		s.getEquipment().setHelmet(skull);
+		
 	}
 	
 	
