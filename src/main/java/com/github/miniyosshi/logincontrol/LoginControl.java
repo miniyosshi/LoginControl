@@ -75,7 +75,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 		
 		Skeleton s = (Skeleton) e.getPlayer().getWorld().spawnEntity(loc, EntityType.SKELETON);
 		s.setCustomNameVisible(true);
-		s.setCustomName("何かの成れの果て");
+		s.setCustomName(e.getPlayer().getName() + "成れの果て");
 		s.getEquipment().setHelmet(skull);
 		
 	}
