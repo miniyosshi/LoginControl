@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -95,10 +96,12 @@ public class LoginControl extends JavaPlugin implements Listener{
 		
 		Location loc = p.getLocation();
 		
-		int i =0;
+		int i = 0;
+		
+		
 		while (i<a.length) {
 			
-			if (hantei((int)p.getLocation().getX(), a[i], 0)&&hantei((int)p.getLocation().getY(), a[i], 1)&&hantei((int)p.getLocation().getZ(), a[i], 2)) {
+			if (hantei((int)loc.getX(), a[i], 0)&&hantei((int)loc.getY(), a[i], 1)&&hantei((int)loc.getZ(), a[i], 2)) {
 				//もし入ってたらそのまま
 				p.sendMessage("そのままの場所です");
 				break;
@@ -106,31 +109,39 @@ public class LoginControl extends JavaPlugin implements Listener{
 			else
 				i++;
 		}
-		if(i ==a.length-1) {
+		if(i == a.length) {
 			//外だったらどっかに飛ばす
-			p.sendMessage("あなたは"+loc.toString()+"にいたので"+"に移動しました(仮)");
-			p.
+			World world = Bukkit.getServer().getWorld("world");
+			Location finloc = new Location(world,128,79,156);
+			p.teleport(finloc);
+			p.sendMessage("あなたは"+loc.toString()+"にいたので"+finloc.toString()+"に移動しました");
 			
 		}
 		
 	}
 	
 	//ログアウト時
+	
+	public boolean horrorOn = false;
+	
 	@EventHandler
 	public void onPlayerLogout (PlayerQuitEvent e) {
 		
-		ItemStack skull = new ItemStack(Material.SKULL_ITEM,1,(byte)3);
-		SkullMeta sm = (SkullMeta) skull.getItemMeta();
-		sm.setOwningPlayer(e.getPlayer());
-		skull.setItemMeta(sm);
+		if (horrorOn == true) {
+			ItemStack skull = new ItemStack(Material.SKULL_ITEM,1,(byte)3);
+			SkullMeta sm = (SkullMeta) skull.getItemMeta();
+			sm.setOwningPlayer(e.getPlayer());
+			skull.setItemMeta(sm);
+			
+			Location loc =e.getPlayer().getLocation();
+			
+			Skeleton s = (Skeleton) e.getPlayer().getWorld().spawnEntity(loc, EntityType.SKELETON);
+			s.setCustomNameVisible(true);
+			s.setCustomName(e.getPlayer().getName() + "の哀れな姿");
+			s.getEquipment().setHelmet(skull);
+			s.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD,1));
+		}
 		
-		Location loc =e.getPlayer().getLocation();
-		
-		Skeleton s = (Skeleton) e.getPlayer().getWorld().spawnEntity(loc, EntityType.SKELETON);
-		s.setCustomNameVisible(true);
-		s.setCustomName(e.getPlayer().getName() + "成れの果て");
-		s.getEquipment().setHelmet(skull);
-		s.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD,1));
 		
 		
 	}
@@ -139,7 +150,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("setapermittedpoint")){
+		if (cmd.getName().equalsIgnoreCase("setpoint")){
 			Player player = null;
 			if(sender instanceof Player) {
 				sender.sendMessage("ここを許可場所に追加します");
@@ -152,6 +163,13 @@ public class LoginControl extends JavaPlugin implements Listener{
 				return false;
 			}
 		}
+		
+		if(cmd.getName().equalsIgnoreCase("horror")) {
+			horrorOn = !horrorOn;
+			sender.sendMessage("horrorOnOff切り替えました");
+			return true;
+		}
+		
 		else 
 			return false;
 	}

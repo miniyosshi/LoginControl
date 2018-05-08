@@ -2,5 +2,7 @@ name: LoginControl
 main: com.github.miniyosshi.logincontrol.LoginControl
 version: 1.0
 commands:
-  sethereasapermittedpoint:
+  setpoint:
     description: ログイン場所を指定します。
+  horror:
+    description: プレーヤーの姿の敵の出現のOnOff
