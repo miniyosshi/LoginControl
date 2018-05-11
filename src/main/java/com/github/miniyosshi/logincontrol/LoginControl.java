@@ -2,13 +2,9 @@ package com.github.miniyosshi.logincontrol;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Properties;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +26,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 	
 	
 	//許可場所
-	int[][] a = new int[30][6];
+	int[][] area = new int[40][6];
 	
 	@Override
 	public void onEnable() {
@@ -61,16 +57,17 @@ public class LoginControl extends JavaPlugin implements Listener{
 				String[] data = line.split(",");
 				
 				for (int j=0; j<6; j++) {
-					a[i][j] = Integer.parseInt(data[j]);
+					area[i][j] = Integer.parseInt(data[j]);
 				}
 				i++;
 			}
-			System.out.println(Arrays.deepToString(a));
+			System.out.println(Arrays.deepToString(area));
 			br.close();
 		}catch(IOException e) {
 			System.out.println(e);
 		}
 	}
+	
 	
 	@Override
 	public void onDisable() {
@@ -99,9 +96,9 @@ public class LoginControl extends JavaPlugin implements Listener{
 		int i = 0;
 		
 		
-		while (i<a.length) {
+		while (i<area.length) {
 			
-			if (hantei((int)loc.getX(), a[i], 0)&&hantei((int)loc.getY(), a[i], 1)&&hantei((int)loc.getZ(), a[i], 2)) {
+			if (hantei((int)loc.getX(), area[i], 0)&&hantei((int)loc.getY(), area[i], 1)&&hantei((int)loc.getZ(), area[i], 2)) {
 				//もし入ってたらそのまま
 				p.sendMessage("そのままの場所です");
 				break;
@@ -109,13 +106,12 @@ public class LoginControl extends JavaPlugin implements Listener{
 			else
 				i++;
 		}
-		if(i == a.length) {
+		if(i == area.length) {
 			//外だったらどっかに飛ばす
-			World world = Bukkit.getServer().getWorld("world");
-			Location finloc = new Location(world,128,79,156);
-			p.teleport(finloc);
-			p.sendMessage("あなたは"+loc.toString()+"にいたので"+finloc.toString()+"に移動しました");
-			
+			//World world = Bukkit.getServer().getWorld("world");
+			//Location finloc = new Location(world,128,79,156);
+			//p.teleport(finloc);
+			p.sendMessage("あなたは"+loc.toString()+"にいたので"+"finloc.toString()"+"に移動しました");
 		}
 		
 	}

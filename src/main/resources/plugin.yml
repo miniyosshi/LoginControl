@@ -6,3 +6,5 @@ commands:
     description: ログイン場所を指定します。
   horror:
     description: プレーヤーの姿の敵の出現のOnOff
+    permission: LoginControl.horror
+    permission-message: You need <permission>.
