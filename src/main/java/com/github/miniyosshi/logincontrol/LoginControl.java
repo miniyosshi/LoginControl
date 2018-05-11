@@ -124,21 +124,8 @@ public class LoginControl extends JavaPlugin implements Listener{
 	public void onPlayerLogout (PlayerQuitEvent e) {
 		
 		if (horrorOn == true) {
-			ItemStack skull = new ItemStack(Material.SKULL_ITEM,1,(byte)3);
-			SkullMeta sm = (SkullMeta) skull.getItemMeta();
-			sm.setOwningPlayer(e.getPlayer());
-			skull.setItemMeta(sm);
-			
-			Location loc =e.getPlayer().getLocation();
-			
-			Skeleton s = (Skeleton) e.getPlayer().getWorld().spawnEntity(loc, EntityType.SKELETON);
-			s.setCustomNameVisible(true);
-			s.setCustomName(e.getPlayer().getName() + "の哀れな姿");
-			s.getEquipment().setHelmet(skull);
-			s.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD,1));
+			Horror.reviver(e.getPlayer());
 		}
-		
-		
 		
 	}
 	
