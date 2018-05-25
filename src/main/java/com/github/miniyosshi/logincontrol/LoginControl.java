@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,10 +25,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class LoginControl extends JavaPlugin implements Listener{
 	
-	
 	//許可場所
-	int[][] area = new int[40][6];
-	
+	ArrayList<ArrayList<Integer>> area = new ArrayList<ArrayList<Integer>>();
+
 	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -56,12 +56,23 @@ public class LoginControl extends JavaPlugin implements Listener{
 			while ((line = br.readLine()) != null) {
 				String[] data = line.split(",");
 				
+				ArrayList<Integer> array = new ArrayList<Integer>();
+				
+				for (int j=0; j<6; j++) {
+					array.add(Integer.parseInt(data[j]));
+				}
+				area.add(array);
+				/*
 				for (int j=0; j<6; j++) {
 					area[i][j] = Integer.parseInt(data[j]);
 				}
 				i++;
+				*/
+				
+				
+				
 			}
-			System.out.println(Arrays.deepToString(area));
+			System.out.println(area.toString());
 			br.close();
 		}catch(IOException e) {
 			System.out.println(e);
@@ -77,8 +88,8 @@ public class LoginControl extends JavaPlugin implements Listener{
 	
 	//座標判定メソッド
 	
-	public static boolean hantei(int p, int[] sixset, int x) {
-		if (sixset[x] <= p && p <= sixset[x+3])
+	public static boolean hantei(int p, ArrayList<Integer> sixset, int x) {
+		if (sixset.get(x) <= p && p <= sixset.get(x+3))
 			return true;
 		else
 			return false;
@@ -96,9 +107,9 @@ public class LoginControl extends JavaPlugin implements Listener{
 		int i = 0;
 		
 		
-		while (i<area.length) {
+		while (i<area.size()) {
 			
-			if (hantei((int)loc.getX(), area[i], 0)&&hantei((int)loc.getY(), area[i], 1)&&hantei((int)loc.getZ(), area[i], 2)) {
+			if (hantei((int)loc.getX(), area.get(i), 0)&&hantei((int)loc.getY(), area.get(i), 1)&&hantei((int)loc.getZ(), area.get(i), 2)) {
 				//もし入ってたらそのまま
 				p.sendMessage("そのままの場所です");
 				break;
@@ -106,7 +117,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 			else
 				i++;
 		}
-		if(i == area.length) {
+		if(i == area.size()) {
 			//外だったらどっかに飛ばす
 			//World world = Bukkit.getServer().getWorld("world");
 			//Location finloc = new Location(world,128,79,156);
@@ -117,7 +128,6 @@ public class LoginControl extends JavaPlugin implements Listener{
 	}
 	
 	//ログアウト時
-	
 	public boolean horrorOn = false;
 	
 	@EventHandler
@@ -126,7 +136,6 @@ public class LoginControl extends JavaPlugin implements Listener{
 		if (horrorOn == true) {
 			Horror.reviver(e.getPlayer());
 		}
-		
 	}
 	
 	
