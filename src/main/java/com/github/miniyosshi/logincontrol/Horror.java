@@ -24,6 +24,9 @@ public class Horror {
 		s.getEquipment().setHelmet(skull);
 		s.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD,1));
 	}
-	
+	/*
+	public void timing() {
+		
+	}*/
 
 }

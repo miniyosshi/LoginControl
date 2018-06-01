@@ -26,7 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class LoginControl extends JavaPlugin implements Listener{
 	
 	//許可場所
-	ArrayList<ArrayList<Integer>> area = new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<String>> area = new ArrayList<ArrayList<String>>();
 
 	@Override
 	public void onEnable() {
@@ -52,25 +52,18 @@ public class LoginControl extends JavaPlugin implements Listener{
 			File f = new File("permitted_area.csv");
 			BufferedReader br = new BufferedReader(new FileReader(f));
 			
-			int i = 0;
+			
 			while ((line = br.readLine()) != null) {
 				String[] data = line.split(",");
 				
-				ArrayList<Integer> array = new ArrayList<Integer>();
+				ArrayList<String> array = new ArrayList<String>();
 				
-				for (int j=0; j<6; j++) {
-					array.add(Integer.parseInt(data[j]));
+				for (int j=0; j<7; j++) {
+					//array.add(Integer.parseInt(data[j]));
+					array.add(data[j]);
 				}
 				area.add(array);
-				/*
-				for (int j=0; j<6; j++) {
-					area[i][j] = Integer.parseInt(data[j]);
-				}
-				i++;
-				*/
-				
-				
-				
+								
 			}
 			System.out.println(area.toString());
 			br.close();
@@ -88,8 +81,9 @@ public class LoginControl extends JavaPlugin implements Listener{
 	
 	//座標判定メソッド
 	
-	public static boolean hantei(int p, ArrayList<Integer> sixset, int x) {
-		if (sixset.get(x) <= p && p <= sixset.get(x+3))
+
+	public static boolean hantei(int p, ArrayList<String> sixset, int x) {
+		if (Integer.parseInt(sixset.get(x+1)) <= p && p <= Integer.parseInt(sixset.get(x+4)))
 			return true;
 		else
 			return false;
@@ -109,7 +103,7 @@ public class LoginControl extends JavaPlugin implements Listener{
 		
 		while (i<area.size()) {
 			
-			if (hantei((int)loc.getX(), area.get(i), 0)&&hantei((int)loc.getY(), area.get(i), 1)&&hantei((int)loc.getZ(), area.get(i), 2)) {
+			if (loc.getWorld().toString() == area.get(i).get(0) && hantei((int)loc.getX(), area.get(i), 0)&&hantei((int)loc.getY(), area.get(i), 1)&&hantei((int)loc.getZ(), area.get(i), 2)) {
 				//もし入ってたらそのまま
 				p.sendMessage("そのままの場所です");
 				break;
@@ -157,8 +151,13 @@ public class LoginControl extends JavaPlugin implements Listener{
 		}
 		
 		if(cmd.getName().equalsIgnoreCase("horror")) {
+			if (horrorOn == true)
+				sender.sendMessage("horrorをOffに切り替えました");
+			else
+				sender.sendMessage("horrorをOnに切り替えました");
+			
 			horrorOn = !horrorOn;
-			sender.sendMessage("horrorOnOff切り替えました");
+			
 			return true;
 		}
 		
